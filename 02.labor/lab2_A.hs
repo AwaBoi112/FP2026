@@ -1,3 +1,4 @@
+import Control.Monad.Trans.Cont (reset)
 szamjegyszorzat 0=1
 szamjegyszorzat n = mod n 10*szamjegyszorzat (div n 10)
 
@@ -6,7 +7,7 @@ szjSzorzat n
     | div n 10 ==0=n
     | otherwise=mod n 10 *szjSzorzat(div n 10)
 
-
+szjSzorzatLs ls =map szjSzorzat ls
 
 szamJOsszeg n szj
     | szj>9=error "nem szamjegy"
@@ -15,6 +16,8 @@ szamJOsszeg n szj
         if mod n 10 == szj 
             then szj+szamJOsszeg(div n 10) szj
             else szamJOsszeg(div n 10) szj
+
+szjOsszeg ls = map szamJOsszeg ls
 
 
 parosSzj n
@@ -30,4 +33,21 @@ lnSzj n ln
     |otherwise=if mod n 10> ln then lnSzj(div n 10) (mod n 10) else
         lnSzj (div n 10) ln
 
-b
+bzamDSzj n b d
+    | n<0=error "helytelen"
+    | n<b= if n==d then 1 else 0
+    | otherwise=if mod n b==d then 1+bzamDSzj (div n b) b d else
+        bzamDSzj (div n b) b d
+
+fiboN n=fiboSg 0 1 0 n
+    where
+        fiboSg a b res n
+            |n==0=res
+            |otherwise= fiboSg b res (res +b) (n-1)
+fibo _ _ res 0=res
+fibo a b res n =fibo b res (res+b) n-1
+
+fiboN2 n =fibo 0 1 0 1000
+
+fiboSzamok n = map (fibo 0 1 0) [0 .. n] 
+
